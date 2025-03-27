@@ -5,7 +5,7 @@ import LayoutLoader from './components/layout/Loaders'
 import { server } from './constants/config'
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
-import { userNotExists } from './redux/reducers/auth'
+import { userNotExists , userExists } from './redux/reducers/auth'
 
 const Home = lazy(() => import('./pages/Home'))
 const Login = lazy(() => import('./pages/Login'))
@@ -25,13 +25,15 @@ const MessagesManagement = lazy(() => import("./pages/admin/MessageManagement"))
 function App() {
 
   const { user , loader} = useSelector((state) => state.auth)
-
+console.log("User value -> ", user);
   const dispatch = useDispatch()
 
   useEffect(()=>{
     axios
     .get(`${server}/api/v1/user/me` , { withCredentials: true })
-    .then((res)=> console.log(res))
+    .then((res)=> {
+      dispatch(userExists())
+      console.log("kks",res)})
     .catch((err)=> dispatch(userNotExists()))
   } , [dispatch])
 
@@ -44,7 +46,7 @@ function App() {
             <Route path="/chat/:chatId" element={<Chat/>} />
             <Route path="/group" element={<Group/>} />
           </Route>
-          <Route path="/login" element={<ProtectRoute user={!user} redirect="/">
+          <Route path="/login" element={<ProtectRoute user={!user || null} redirect="/">
              <Login/>
             </ProtectRoute>} />
 
