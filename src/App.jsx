@@ -25,7 +25,7 @@ const MessagesManagement = lazy(() => import("./pages/admin/MessageManagement"))
 function App() {
 
   const { user , loader} = useSelector((state) => state.auth)
-console.log("User value -> ", user);
+console.log("User value is -> ", user);
   const dispatch = useDispatch()
 
   useEffect(()=>{
